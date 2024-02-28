@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
-from database import SessionLocal, engine
+from db import SessionLocal, engine
 import crud, models, schemas
 from sqlalchemy.orm import Session
 from api import api_router
