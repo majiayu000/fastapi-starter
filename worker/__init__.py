@@ -1,1 +1,1 @@
-from .app import add, celery_app, process_ask, batch_ask
+from .app import add, celery_app, process_ask

@@ -15,7 +15,7 @@ from api import api_router
 from fastapi.middleware.cors import CORSMiddleware
 from worker import celery_app, add
 
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
 # 创建 FastAPI 实例
 app = FastAPI()
 
@@ -36,7 +36,7 @@ async def read_data():
 
 @app.get("/task")
 async def process_endpoint():
-    result = add.delay(1,2)
+    result = add.delay(1, 2)
     return {"task_id": result.id}
 
 
