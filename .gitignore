@@ -61,6 +61,13 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
+# Log rotation files and lock files
+*.log.*
+*.__worker-*.lock
+rotation-test.log.*
+.__fastapi-starter.lock
+.__rotation-test.lock
+
 # Flask stuff:
 instance/
 .webassets-cache

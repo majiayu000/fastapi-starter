@@ -1,4 +1,3 @@
 from fastapi import APIRouter
-from .api_v1 import *
 
-api_router = APIRouter()
+api_router = APIRouter(prefix="/api/v1", tags=["API v1"])

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Starter - 欢迎页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 20%, #16213e 60%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            color: white;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .ascii-art {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            white-space: pre;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            background: linear-gradient(45deg, #00d4ff, #ff6b9d, #00ff88, #ffaa00, #aa00ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .info-cards {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 0px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .card:hover::before {
+            left: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.6);
+        }
+        
+        .card h3 {
+            margin-bottom: 0.5rem;
+            color: #00d4ff;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .card p {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .link-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 157, 0.1));
+            color: white;
+            text-decoration: none;
+            border-radius: 0px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            transition: all 0.4s ease;
+            font-weight: bold;
+            overflow: hidden;
+        }
+        
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0px;
+            padding: 2px;
+            background: linear-gradient(45deg, #00d4ff, #ff6b9d, #00ff88);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+        }
+        
+        .link-btn:hover {
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 157, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
+        }
+        
+        .link-btn:hover::before {
+            background: linear-gradient(45deg, #00d4ff, #ff6b9d, #00ff88, #ffaa00);
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: radial-gradient(circle, #00d4ff, transparent);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0 4px #00d4ff;
+        }
+        
+        .star {
+            position: absolute;
+            background: #fff;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: twinkle 3s ease-in-out infinite;
+        }
+        
+        .star.small {
+            width: 4px;
+            height: 4px;
+        }
+        
+        .star.medium {
+            width: 6px;
+            height: 6px;
+        }
+        
+        .star.large {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .star.blue {
+            background: #00d4ff;
+            box-shadow: 0 0 10px #00d4ff;
+        }
+        
+        .star.pink {
+            background: #ff6b9d;
+            box-shadow: 0 0 10px #ff6b9d;
+        }
+        
+        .star.green {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+        
+        .star.orange {
+            background: #ffaa00;
+            box-shadow: 0 0 10px #ffaa00;
+        }
+        
+        .star.purple {
+            background: #aa00ff;
+            box-shadow: 0 0 10px #aa00ff;
+        }
+        
+        .cursor-trail {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #00d4ff, transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: cursorFade 1s ease-out forwards;
+            box-shadow: 0 0 8px #00d4ff;
+        }
+        
+
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.5; }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+            25% { opacity: 1; transform: scale(1.2) rotate(90deg); }
+            50% { opacity: 0.6; transform: scale(0.8) rotate(180deg); }
+            75% { opacity: 1; transform: scale(1.1) rotate(270deg); }
+        }
+        
+        @keyframes cursorFade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+        
+        .falling-star {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1000;
+            animation: starfall 2s ease-out forwards;
+        }
+        
+        @keyframes starfall {
+            0% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg) translateY(100px);
+            }
+        }
+        
+        .star-burst {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1000;
+            animation: starBurst 1.5s ease-out forwards;
+        }
+        
+        @keyframes starBurst {
+            0% {
+                opacity: 1;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg);
+            }
+        }
+        
+        @keyframes meteorFade {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+        
+        .status {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 8px 16px;
+            border-radius: 0px;
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .ascii-art {
+                font-size: 0.8rem;
+            }
+            .title {
+                font-size: 2rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .info-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <!-- 动态粒子和星星效果将通过JavaScript生成 -->
+    </div>
+    
+    <div class="container">
+        <div class="ascii-art">
+███████╗ █████╗ ███████╗████████╗ █████╗ ██████╗ ██╗
+██╔════╝██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██║
+█████╗  ███████║███████╗   ██║   ███████║██████╔╝██║
+██╔══╝  ██╔══██║╚════██║   ██║   ██╔══██║██╔═══╝ ██║
+██║     ██║  ██║███████║   ██║   ██║  ██║██║     ██║
+╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝
+        </div>
+        
+        <h1 class="title">FastAPI Starter</h1>
+        <p class="subtitle">🚀 现代化的 Python Web API 框架</p>
+        
+        <div class="info-cards">
+            <div class="card">
+                <h3>⚡ 快速</h3>
+                <p>高性能异步处理</p>
+            </div>
+            <div class="card">
+                <h3>📋 文档</h3>
+                <p>自动生成API文档</p>
+            </div>
+            <div class="card">
+                <h3>🔒 安全</h3>
+                <p>内置安全特性</p>
+            </div>
+            <div class="card">
+                <h3>🎯 现代</h3>
+                <p>基于Python 3.10+</p>
+            </div>
+        </div>
+        
+        <div class="links">
+            <a href="/docs" class="link-btn">📖 API 文档</a>
+            <a href="/redoc" class="link-btn">📘 ReDoc</a>
+            <a href="/hi" class="link-btn">👋 测试接口</a>
+        </div>
+    </div>
+    
+    <div class="status">🟢 服务运行中</div>
+    
+    <script>
+        // 创建动态粒子效果
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // 创建星星效果
+        function createStars() {
+            const particlesContainer = document.querySelector('.particles');
+            const starCount = 80;
+            const colors = ['blue', 'pink', 'green', 'orange', 'purple'];
+            const sizes = ['small', 'medium', 'large'];
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+                
+                star.className = `star ${randomSize} ${randomColor}`;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                particlesContainer.appendChild(star);
+            }
+        }
+        
+        // 鼠标轨迹效果
+        function createCursorTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.body.appendChild(trail);
+            
+            // 1秒后移除轨迹元素
+            setTimeout(() => {
+                if (trail.parentNode) {
+                    trail.parentNode.removeChild(trail);
+                }
+            }, 1000);
+        }
+        
+        // 创建星星撒落特效
+        function createFallingStar(x, y) {
+            const star = document.createElement('div');
+            const colors = ['#00d4ff', '#ff6b9d', '#00ff88', '#ffaa00', '#aa00ff', '#ffffff'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            const size = Math.random() * 5 + 4; // 4-9px 更大更明显
+            const angle = Math.random() * 360;
+            
+            star.style.position = 'absolute';
+            star.style.left = x + 'px';
+            star.style.top = y + 'px';
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.background = randomColor;
+            star.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+            star.style.pointerEvents = 'none';
+            star.style.zIndex = '1000';
+            star.style.boxShadow = `0 0 ${size * 3}px ${randomColor}, 0 0 ${size * 6}px ${randomColor}`;
+            star.style.transform = `rotate(${angle}deg)`;
+            
+            // 添加随机的初始速度
+            const vx = (Math.random() - 0.5) * 3; // 水平速度 -1.5 to 1.5
+            const vy = Math.random() * 1.5 + 0.5; // 垂直速度 0.5 to 2 (更慢)
+            const gravity = 0.05; // 更小的重力
+            const rotation = (Math.random() - 0.5) * 8;
+            
+            document.body.appendChild(star);
+            
+            let currentX = x;
+            let currentY = y;
+            let currentVx = vx;
+            let currentVy = vy;
+            let currentRotation = angle;
+            let opacity = 1;
+            let scale = 1;
+            
+            function animateStar() {
+                currentX += currentVx;
+                currentY += currentVy;
+                currentVy += gravity; // 重力效果
+                currentRotation += rotation;
+                opacity -= 0.008; // 更慢消失
+                scale -= 0.005; // 更慢缩小
+                
+                star.style.left = currentX + 'px';
+                star.style.top = currentY + 'px';
+                star.style.opacity = opacity;
+                star.style.transform = `rotate(${currentRotation}deg) scale(${scale})`;
+                
+                // 当星星消失或离开屏幕时移除
+                if (opacity <= 0 || currentY > window.innerHeight + 50 || scale <= 0) {
+                    if (star.parentNode) {
+                        star.parentNode.removeChild(star);
+                    }
+                } else {
+                    requestAnimationFrame(animateStar);
+                }
+            }
+            
+            requestAnimationFrame(animateStar);
+        }
+        
+        // 创建爆发式星星效果
+        function createStarBurst(x, y) {
+            const starCount = Math.random() * 8 + 4; // 4-12个星星
+            
+            for (let i = 0; i < starCount; i++) {
+                setTimeout(() => {
+                    const offsetX = (Math.random() - 0.5) * 40; // 随机偏移
+                    const offsetY = (Math.random() - 0.5) * 40;
+                    createFallingStar(x + offsetX, y + offsetY);
+                }, i * 50); // 错开创建时间
+            }
+        }
+        
+        // 创建流星效果
+        function createShootingStar(startX, startY, endX, endY) {
+            const meteor = document.createElement('div');
+            const colors = ['#00d4ff', '#ff6b9d', '#00ff88', '#ffaa00', '#aa00ff'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            const length = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
+            const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+            
+            meteor.style.position = 'absolute';
+            meteor.style.left = startX + 'px';
+            meteor.style.top = startY + 'px';
+            meteor.style.width = Math.min(length, 100) + 'px';
+            meteor.style.height = '2px';
+            meteor.style.background = `linear-gradient(90deg, ${randomColor}, transparent)`;
+            meteor.style.transformOrigin = 'left center';
+            meteor.style.transform = `rotate(${angle}deg)`;
+            meteor.style.pointerEvents = 'none';
+            meteor.style.zIndex = '999';
+            meteor.style.boxShadow = `0 0 10px ${randomColor}`;
+            meteor.style.animation = 'meteorFade 0.8s ease-out forwards';
+            
+            document.body.appendChild(meteor);
+            
+            // 在流星尾部添加一些星星
+            setTimeout(() => {
+                const starX = startX + (endX - startX) * 0.7;
+                const starY = startY + (endY - startY) * 0.7;
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        createFallingStar(starX + (Math.random() - 0.5) * 20, starY + (Math.random() - 0.5) * 20);
+                    }, i * 100);
+                }
+            }, 300);
+            
+            setTimeout(() => {
+                if (meteor.parentNode) {
+                    meteor.parentNode.removeChild(meteor);
+                }
+            }, 800);
+        }
+        
+        // 鼠标移动特效
+        let mouseTrailTimer;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let lastMoveTime = Date.now();
+        let meteorTimer;
+        
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            const normalizedX = x / window.innerWidth;
+            const normalizedY = y / window.innerHeight;
+            
+            // 计算鼠标移动速度
+            const currentTime = Date.now();
+            const deltaTime = currentTime - lastMoveTime;
+            const deltaX = x - lastMouseX;
+            const deltaY = y - lastMouseY;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const speed = distance / deltaTime;
+            
+            lastMouseX = x;
+            lastMouseY = y;
+            lastMoveTime = currentTime;
+            
+            // 粒子跟随鼠标效果
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                const speed = (index % 5 + 1) * 0.8;
+                const xOffset = (normalizedX - 0.5) * speed * 20;
+                const yOffset = (normalizedY - 0.5) * speed * 20;
+                particle.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+            
+            // 星星轻微反应效果
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                const speed = (index % 3 + 1) * 0.3;
+                const xOffset = (normalizedX - 0.5) * speed * 10;
+                const yOffset = (normalizedY - 0.5) * speed * 10;
+                star.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+            
+            // 创建鼠标轨迹和星星特效（高频率触发）
+            clearTimeout(mouseTrailTimer);
+            mouseTrailTimer = setTimeout(() => {
+                // 增加轨迹概率到60%
+                if (Math.random() < 0.6) {
+                    createCursorTrail(x, y);
+                }
+                
+                // 大幅降低触发门槛，增加星星撒落效果
+                let starProbability = 0.5; // 基础概率从15%增加到50%
+                let starCount = 1;
+                
+                if (speed > 0.5) { // 极低门槛，几乎任何移动都触发
+                    starProbability = 0.8; // 80%概率
+                    starCount = 2;
+                    
+                    // 中等速度时创建星星雨效果  
+                    if (speed > 1.5) {
+                        starProbability = 1.0; // 100%概率
+                        starCount = 4;
+                        for (let i = 0; i < 3; i++) {
+                            const offsetX = (Math.random() - 0.5) * 80;
+                            const offsetY = (Math.random() - 0.5) * 80;
+                            createFallingStar(x + offsetX, y + offsetY);
+                        }
+                        
+                        // 较低门槛的流星效果
+                        if (speed > 3) {
+                            clearTimeout(meteorTimer);
+                            meteorTimer = setTimeout(() => {
+                                const prevX = x - deltaX * 2;
+                                const prevY = y - deltaY * 2;
+                                createShootingStar(prevX, prevY, x, y);
+                            }, 50);
+                        }
+                    }
+                }
+                
+                // 基础星星撒落效果 - 根据速度创建多颗星星
+                if (Math.random() < starProbability) {
+                    for (let i = 0; i < starCount; i++) {
+                        const offsetX = (Math.random() - 0.5) * 30;
+                        const offsetY = (Math.random() - 0.5) * 30;
+                        createFallingStar(x + offsetX, y + offsetY);
+                    }
+                }
+            }, 20); // 进一步提高响应频率
+        });
+        
+
+        
+        // 鼠标点击时创建星星爆发效果
+        document.addEventListener('click', (e) => {
+            createStarBurst(e.clientX, e.clientY);
+        });
+        
+        // 卡片鼠标悬停特效增强
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', (e) => {
+                const rect = card.getBoundingClientRect();
+                const sparkleCount = 5;
+                
+                for (let i = 0; i < sparkleCount; i++) {
+                    setTimeout(() => {
+                        const sparkle = document.createElement('div');
+                        sparkle.className = 'cursor-trail';
+                        sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                        sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+                        sparkle.style.background = 'radial-gradient(circle, #00d4ff, transparent)';
+                        document.body.appendChild(sparkle);
+                        
+                        setTimeout(() => {
+                            if (sparkle.parentNode) {
+                                sparkle.parentNode.removeChild(sparkle);
+                            }
+                        }, 1000);
+                    }, i * 100);
+                }
+            });
+        });
+        
+        // 按钮悬停特效
+        document.querySelectorAll('.link-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.left = rect.left + 'px';
+                ripple.style.top = rect.top + 'px';
+                ripple.style.width = rect.width + 'px';
+                ripple.style.height = rect.height + 'px';
+                ripple.style.background = 'radial-gradient(circle, rgba(0, 212, 255, 0.3), transparent)';
+                ripple.style.borderRadius = '30px';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.animation = 'cursorFade 0.6s ease-out forwards';
+                document.body.appendChild(ripple);
+                
+                setTimeout(() => {
+                    if (ripple.parentNode) {
+                        ripple.parentNode.removeChild(ripple);
+                    }
+                }, 600);
+            });
+        });
+        
+        // 页面加载时创建所有效果
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            createStars();
+        });
+    </script>
+</body>
+</html> 
